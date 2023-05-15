@@ -6,11 +6,9 @@ import Detail from './components/Detail.jsx'
 import Form from './components/Form/Form.jsx';
 import Favorites from './components/Favorites/Favorites.jsx';
 import Error from './components/Error/Error.jsx';
-
-
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-
+import axios from 'axios';
 
 
 
@@ -21,17 +19,17 @@ function App () {
   const location = useLocation(); 
   const navigate = useNavigate();
   const [access, setAccess] = useState(false);
-  const username = 'davidrodber27@gmail.com';
-  const password = '1password';
-
+  
   function login(userData) {
-    if (userData.password === password && userData.username === username) {
-      setAccess(true);
-      navigate('/home');
-    }else {
-      window.alert("Correo o contraseña incorrectos");
-    }
-  }  
+    const { username: email, password } = userData;
+    console.log(email, password);
+    const URL = 'http://localhost:3001/rickandmorty/login';
+    axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
+       const { access } = data;
+       setAccess(data);
+       access && navigate('/home');
+    });
+  }
 
   useEffect(() => {
     !access && navigate();
@@ -42,7 +40,7 @@ function App () {
   }
   
   function onSearch(character) {
-    fetch(`http://localhost:3001/rickandmorty/character/${character}`)
+    fetch(`https://rickandmortyapi.com/api/character/${character}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.name) {

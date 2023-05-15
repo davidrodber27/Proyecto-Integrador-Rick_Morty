@@ -13,18 +13,11 @@ const rootReducer = (state=initialState,{ type, payload }) => {
 
      case ADD_CHARACTER_TO_FAVORITES: 
        
-      return {
-        ...state,
-        allCharacters: [...state.allCharacters, payload],
-        myFavorites: [...state.myFavorites, payload]
-      }
+      return { ...state, myFavorites: payload, allCharacters: payload };
 
      case REMOVE_CHARACTER_FROM_FAVORITES: 
        
-      return {
-        ...state,
-        myFavorites: state.myFavorites.filter((element) => element.id !== payload)
-      }
+      return { ...state, myFavorites: payload };
 
       case FILTER:
         const filterCopy = [...state.allCharacters];
